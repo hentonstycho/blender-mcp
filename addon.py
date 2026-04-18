@@ -83,9 +83,9 @@ class BlenderMCPServer:
         if self.server_thread:
             try:
                 if self.server_thread.is_alive():
-                    # Increased timeout from 1.0 to 2.0 so the thread has more
-                    # time to finish cleanly on slower machines
-                    self.server_thread.join(timeout=2.0)
+                    # Increased timeout from 1.0 to 3.0 for reliability on slower machines
+                    # (was 2.0, bumping up a bit more since I noticed occasional hangs)
+                    self.server_thread.join(timeout=3.0)
             except:
                 pass
             self.server_thread = None
@@ -102,7 +102,4 @@ class BlenderMCPServer:
                 # Accept new connection
                 try:
                     client, address = self.socket.accept()
-                    print(f"Connected to client: {address}")
-
-                    # Handle client in a separate thread
-                    client_thread = thr
+               
