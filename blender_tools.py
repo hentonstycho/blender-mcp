@@ -36,7 +36,7 @@ def create_object(params: dict) -> dict:
         import bpy
         obj_type = params.get("type", "CUBE").upper()
         name = params.get("name", None)
-        # Default to scene cursor location if no location provided
+        # Default to world origin; override with 'location' param as [x, y, z]
         location = params.get("location", [0, 0, 0])
 
         bpy.ops.object.select_all(action="DESELECT")
@@ -50,6 +50,8 @@ def create_object(params: dict) -> dict:
             "TORUS": bpy.ops.mesh.primitive_torus_add,
             # EMPTY is handy as a parent/pivot object
             "EMPTY": bpy.ops.object.empty_add,
+            # MONKEY (Suzanne) - useful for quick testing/demos
+            "MONKEY": bpy.ops.mesh.primitive_monkey_add,
         }
 
         if obj_type not in type_map:
@@ -95,8 +97,3 @@ def set_object_transform(params: dict) -> dict:
         obj = bpy.data.objects.get(name)
         if obj is None:
             return {"error": f"Object '{name}' not found"}
-
-        if "location" in params:
-            obj.location = tuple(params["location"])
-        if "rotation" in params:
-            obj.rotation_euler = tuple(params["
