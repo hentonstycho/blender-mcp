@@ -36,6 +36,7 @@ def create_object(params: dict) -> dict:
         import bpy
         obj_type = params.get("type", "CUBE").upper()
         name = params.get("name", None)
+        # Default to scene cursor location if no location provided
         location = params.get("location", [0, 0, 0])
 
         bpy.ops.object.select_all(action="DESELECT")
@@ -47,6 +48,8 @@ def create_object(params: dict) -> dict:
             "PLANE": bpy.ops.mesh.primitive_plane_add,
             "CONE": bpy.ops.mesh.primitive_cone_add,
             "TORUS": bpy.ops.mesh.primitive_torus_add,
+            # EMPTY is handy as a parent/pivot object
+            "EMPTY": bpy.ops.object.empty_add,
         }
 
         if obj_type not in type_map:
@@ -96,32 +99,4 @@ def set_object_transform(params: dict) -> dict:
         if "location" in params:
             obj.location = tuple(params["location"])
         if "rotation" in params:
-            obj.rotation_euler = tuple(params["rotation"])
-        if "scale" in params:
-            obj.scale = tuple(params["scale"])
-
-        return {
-            "name": obj.name,
-            "location": list(obj.location),
-            "rotation": list(obj.rotation_euler),
-            "scale": list(obj.scale),
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-
-# Registry mapping tool names to handler functions
-TOOL_REGISTRY: dict[str, Any] = {
-    "get_scene_info": get_scene_info,
-    "create_object": create_object,
-    "delete_object": delete_object,
-    "set_object_transform": set_object_transform,
-}
-
-
-def dispatch(tool_name: str, params: dict) -> dict:
-    """Dispatch a tool call by name."""
-    handler = TOOL_REGISTRY.get(tool_name)
-    if handler is None:
-        return {"error": f"Unknown tool: '{tool_name}'"}
-    return handler(params)
+            obj.rotation_euler = tuple(params["
