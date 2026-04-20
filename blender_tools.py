@@ -38,6 +38,8 @@ def create_object(params: dict) -> dict:
         name = params.get("name", None)
         # Default to world origin; override with 'location' param as [x, y, z]
         location = params.get("location", [0, 0, 0])
+        # Default scale for new objects; can be overridden via 'scale' param
+        scale = params.get("scale", None)
 
         bpy.ops.object.select_all(action="DESELECT")
 
@@ -63,7 +65,14 @@ def create_object(params: dict) -> dict:
         if name:
             obj.name = name
 
-        return {"name": obj.name, "type": obj.type, "location": list(obj.location)}
+        # Apply optional uniform or per-axis scale after creation
+        if scale is not None:
+            if isinstance(scale, (int, float)):
+                obj.scale = (scale, scale, scale)
+            elif len(scale) == 3:
+                obj.scale = tuple(scale)
+
+        return {"name": obj.name, "type": obj.type, "location": list(obj.location), "scale": list(obj.scale)}
     except Exception as e:
         return {"error": str(e)}
 
@@ -92,8 +101,4 @@ def set_object_transform(params: dict) -> dict:
         import bpy
         name = params.get("name")
         if not name:
-            return {"error": "'name' parameter is required"}
-
-        obj = bpy.data.objects.get(name)
-        if obj is None:
-            return {"error": f"Object '{name}' not found"}
+            return {"error": "'name' parameter is re
