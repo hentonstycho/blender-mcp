@@ -58,8 +58,8 @@ The system consists of two main components:
 
 ### Prerequisites
 
-- Blender 3.0 or newer
-- Python 3.10 or newer
+- Blender 3.0 or newer (tested on 4.2 on Windows 11)
+- Python 3.10 or newer (tested on 3.11)
 - uv package manager: 
 
 **If you're on Mac, please install uv as**
@@ -74,8 +74,5 @@ and then add uv to the user path in Windows (you may need to restart Claude Desk
 ```powershell
 $localBin = "$env:USERPROFILE\.local\bin"
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-[Environment]::SetEnvironmentVariable("Path", "$userPath;$localBin", "User")
-```
-
-Otherwise installation instructions are on their website: [Install uv](https://docs.astral.sh/uv/getting-start
+[Environment]::SetEnv
 ```
