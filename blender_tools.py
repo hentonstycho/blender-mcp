@@ -38,8 +38,10 @@ def create_object(params: dict) -> dict:
         name = params.get("name", None)
         # Default to world origin; override with 'location' param as [x, y, z]
         location = params.get("location", [0, 0, 0])
-        # Default scale for new objects; can be overridden via 'scale' param
-        scale = params.get("scale", None)
+        # Default scale to 1.0 uniform; can be overridden via 'scale' param.
+        # I changed the default from None to 1.0 so newly created objects always
+        # have an explicit scale applied, making it easier to spot in the outliner.
+        scale = params.get("scale", 1.0)
 
         bpy.ops.object.select_all(action="DESELECT")
 
@@ -87,18 +89,4 @@ def delete_object(params: dict) -> dict:
 
         obj = bpy.data.objects.get(name)
         if obj is None:
-            return {"error": f"Object '{name}' not found"}
-
-        bpy.data.objects.remove(obj, do_unlink=True)
-        return {"deleted": name}
-    except Exception as e:
-        return {"error": str(e)}
-
-
-def set_object_transform(params: dict) -> dict:
-    """Set location, rotation, or scale of an object."""
-    try:
-        import bpy
-        name = params.get("name")
-        if not name:
-            return {"error": "'name' parameter is re
+            return {"error": f"Ob
