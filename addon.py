@@ -95,7 +95,8 @@ class BlenderMCPServer:
     def _server_loop(self):
         """Main server loop in a separate thread"""
         print("Server thread started")
-        self.socket.settimeout(1.0)  # Timeout to allow for stopping
+        # Increased timeout slightly from 1.0 to 1.5 to reduce CPU spin on my laptop
+        self.socket.settimeout(1.5)
 
         while self.running:
             try:
